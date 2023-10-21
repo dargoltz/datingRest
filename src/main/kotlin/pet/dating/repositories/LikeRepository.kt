@@ -1,4 +1,4 @@
-package pet.dating.repositories;
+package pet.dating.repositories
 
 import org.springframework.data.repository.CrudRepository
 import pet.dating.models.Like
