@@ -1,0 +1,63 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: qwe
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: info
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: contacts
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: likes
+            columns:
+              - column:
+                  name: user_id
+                  type: int
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: liked_user_id
+                  type: int
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: is_match
+                  type: boolean
+                  constraints:
+                    nullable: true
+        - addForeignKeyConstraint:
+            constraintName: fk_user_id
+            baseTableName: likes
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            constraintName: fk_liked_user_id
+            baseTableName: likes
+            baseColumnNames: liked_user_id
+            referencedTableName: users
+            referencedColumnNames: id
