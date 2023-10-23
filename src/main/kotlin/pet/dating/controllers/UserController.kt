@@ -27,11 +27,10 @@ class UserController(
 
     @GetMapping("/like/{id}")
     fun like(@PathVariable id: Int) {
-        val newLike = Like()
-        newLike.id = LikeId()
-        newLike.id?.userId = 1 // todo
-        newLike.id?.likedUserId = id
-        newLike.isMatch = false
+        val newLike = Like().apply {
+            initLikeId(1, id)
+            isMatch = false
+        }
         likeRepository.save(newLike)
     }
 }
