@@ -20,4 +20,12 @@ open class Like {
 
     @Column(name = "is_match")
     open var isMatch: Boolean? = null
+
+    fun initLikeId(userId: Int, likedUserId: Int) {
+        this.id = LikeId().apply {
+            this.userId = userId
+            this.likedUserId = likedUserId
+        }
+    }
+
 }
