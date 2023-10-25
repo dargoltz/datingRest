@@ -4,12 +4,32 @@ databaseChangeLog:
       author: qwe
       changes:
         - createTable:
-            tableName: user_profiles
+            tableName: user
             columns:
               - column:
                   name: id
                   type: int
                   autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: username
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: user_profile
+            columns:
+              - column:
+                  name: user_id
+                  type: int
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -28,9 +48,15 @@ databaseChangeLog:
                   type: varchar(255)
                   constraints:
                     nullable: false
+        - addForeignKeyConstraint:
+            constraintName: fk_user_id
+            baseTableName: user_profile
+            baseColumnNames: user_id
+            referencedTableName: user
+            referencedColumnNames: id
 
         - createTable:
-            tableName: likes
+            tableName: like
             columns:
               - column:
                   name: user_id
@@ -51,13 +77,13 @@ databaseChangeLog:
                     nullable: true
         - addForeignKeyConstraint:
             constraintName: fk_user_id
-            baseTableName: likes
+            baseTableName: like
             baseColumnNames: user_id
-            referencedTableName: users
-            referencedColumnNames: id
+            referencedTableName: user
+            referencedColumnNames: user_id
         - addForeignKeyConstraint:
             constraintName: fk_liked_user_id
-            baseTableName: likes
+            baseTableName: like
             baseColumnNames: liked_user_id
-            referencedTableName: users
-            referencedColumnNames: id
+            referencedTableName: user
+            referencedColumnNames: user_id
