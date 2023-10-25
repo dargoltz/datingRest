@@ -80,10 +80,10 @@ databaseChangeLog:
             baseTableName: like
             baseColumnNames: user_id
             referencedTableName: user
-            referencedColumnNames: user_id
+            referencedColumnNames: id
         - addForeignKeyConstraint:
             constraintName: fk_liked_user_id
             baseTableName: like
             baseColumnNames: liked_user_id
             referencedTableName: user
-            referencedColumnNames: user_id
+            referencedColumnNames: id
