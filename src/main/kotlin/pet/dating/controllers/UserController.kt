@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
 import pet.dating.models.Like
+import pet.dating.models.LikeId
 import pet.dating.models.UserProfile
 import pet.dating.repositories.LikeRepository
 import pet.dating.repositories.UserProfileRepository
@@ -27,7 +28,10 @@ class UserController(
     @GetMapping("/like/{id}")
     fun like(@PathVariable id: Int) {
         val newLike = Like().apply {
-            initLikeId(1, id)
+            LikeId().apply {
+                userId = id
+                likedUserId = id
+            }
             isMatch = false
         }
         likeRepository.save(newLike)
