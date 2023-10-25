@@ -3,8 +3,8 @@ package pet.dating.models
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "users")
-open class User {
+@Table(name = "user_profiles")
+open class UserProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -19,6 +19,6 @@ open class User {
     @Column(name = "contacts", nullable = false)
     open var contacts: String? = null
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "userProfile")
     open var likes: MutableSet<Like> = mutableSetOf()
 }

@@ -4,24 +4,23 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RestController
 import pet.dating.models.Like
-import pet.dating.models.LikeId
-import pet.dating.models.User
+import pet.dating.models.UserProfile
 import pet.dating.repositories.LikeRepository
-import pet.dating.repositories.UserRepository
+import pet.dating.repositories.UserProfileRepository
 
 @RestController("/users")
 class UserController(
-    private val userRepository: UserRepository,
+    private val userRepository: UserProfileRepository,
     private val likeRepository: LikeRepository
 ) {
 
     @GetMapping("/")
-    fun getUsers(): MutableIterable<User> {
+    fun getUsers(): MutableIterable<UserProfile> {
         return userRepository.findAll()
     }
 
     @GetMapping("/{id}")
-    fun getUser(@PathVariable id: Int): User {
+    fun getUser(@PathVariable id: Int): UserProfile {
         return userRepository.findById(id).get()
     }
 
