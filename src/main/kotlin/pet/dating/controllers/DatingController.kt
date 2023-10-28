@@ -9,8 +9,8 @@ import pet.dating.models.UserProfile
 import pet.dating.repositories.LikeRepository
 import pet.dating.repositories.UserProfileRepository
 
-@RestController("/users")
-class UserController(
+@RestController("/dating")
+class DatingController(
     private val userRepository: UserProfileRepository,
     private val likeRepository: LikeRepository
 ) {
