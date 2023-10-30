@@ -3,7 +3,7 @@ package pet.dating.models
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "user")
+@Table(name = "user", schema = "public")
 open class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
