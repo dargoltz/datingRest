@@ -1,8 +1,6 @@
 package pet.dating.controllers
 
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import pet.dating.dto.UserAuthDto
 import pet.dating.repositories.UserRepository
 import pet.dating.service.ValidationService
@@ -23,4 +21,28 @@ class AuthController(
         }
     }
 
+    @GetMapping("/users")
+    fun getUnlikedUsers() {
+
+    }
+
+    @PostMapping("/user")
+    fun changeUserInfo() {
+
+    }
+
+    @GetMapping("/user/{id}")
+    fun getUserInfo(@PathVariable id: String) {
+
+    }
+
+    @GetMapping("/like/{id}")
+    fun like(@PathVariable id: String) {
+
+    }
+
+    @GetMapping("/matches")
+    fun getMatchedUsers() {
+
+    }
 }
