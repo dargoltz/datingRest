@@ -1,24 +1,20 @@
 package pet.dating.models
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 
 @Entity
-@Table(name = "user", schema = "public")
+@Table(name = "\"user\"")
 open class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    open var id: Int? = null
-
     @Column(name = "username", nullable = false)
     open var username: String? = null
 
     @Column(name = "password", nullable = false)
     open var password: String? = null
 
-    @OneToMany(mappedBy = "user")
-    open var likes: MutableSet<Like> = mutableSetOf()
-
-    @OneToOne(mappedBy = "user")
-    open var userProfile: UserProfile? = null
+    @Column(name = "role", nullable = false)
+    open var role: String? = null
 }

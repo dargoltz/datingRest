@@ -8,23 +8,23 @@ import java.util.*
 
 @Embeddable
 open class LikeId : Serializable {
-    @Column(name = "user_id", nullable = false)
-    open var userId: Int? = null
+    @Column(name = "\"user\"", nullable = false)
+    open var user: String? = null
 
-    @Column(name = "liked_user_id", nullable = false)
-    open var likedUserId: Int? = null
-    override fun hashCode(): Int = Objects.hash(userId, likedUserId)
+    @Column(name = "liked_user", nullable = false)
+    open var likedUser: String? = null
+    override fun hashCode(): Int = Objects.hash(user, likedUser)
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
 
         other as LikeId
 
-        return userId == other.userId &&
-                likedUserId == other.likedUserId
+        return user == other.user &&
+                likedUser == other.likedUser
     }
 
     companion object {
-        private const val serialVersionUID = 5192855294742587588L
+        private const val serialVersionUID = 8059207814646204713L
     }
 }
