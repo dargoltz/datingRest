@@ -7,19 +7,18 @@ databaseChangeLog:
             tableName: user
             columns:
               - column:
-                  name: id
-                  type: int
-                  autoIncrement: true
+                  name: username
+                  type: varchar(255)
                   constraints:
                     primaryKey: true
-                    nullable: false
+                    unique: true
               - column:
-                  name: username
+                  name: password
                   type: varchar(255)
                   constraints:
                     nullable: false
               - column:
-                  name: password
+                  name: role
                   type: varchar(255)
                   constraints:
                     nullable: false
@@ -28,16 +27,10 @@ databaseChangeLog:
             tableName: user_profile
             columns:
               - column:
-                  name: user_id
-                  type: int
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: name
+                  name: user
                   type: varchar(255)
                   constraints:
-                    nullable: false
+                    primaryKey: true
               - column:
                   name: info
                   type: varchar(255)
@@ -51,39 +44,32 @@ databaseChangeLog:
         - addForeignKeyConstraint:
             constraintName: fk_user_id
             baseTableName: user_profile
-            baseColumnNames: user_id
+            baseColumnNames: user
             referencedTableName: user
-            referencedColumnNames: id
+            referencedColumnNames: username
 
         - createTable:
             tableName: like
             columns:
               - column:
-                  name: user_id
-                  type: int
+                  name: user
+                  type: varchar(255)
                   constraints:
                     primaryKey: true
-                    nullable: false
               - column:
-                  name: liked_user_id
-                  type: int
+                  name: liked_user
+                  type: varchar(255)
                   constraints:
                     primaryKey: true
-                    nullable: false
-              - column:
-                  name: is_match
-                  type: boolean
-                  constraints:
-                    nullable: true
         - addForeignKeyConstraint:
-            constraintName: fk_user_id
+            constraintName: fk_user
             baseTableName: like
-            baseColumnNames: user_id
+            baseColumnNames: user
             referencedTableName: user
-            referencedColumnNames: id
+            referencedColumnNames: username
         - addForeignKeyConstraint:
-            constraintName: fk_liked_user_id
+            constraintName: fk_liked_user
             baseTableName: like
-            baseColumnNames: liked_user_id
+            baseColumnNames: liked_user
             referencedTableName: user
-            referencedColumnNames: id
+            referencedColumnNames: username
