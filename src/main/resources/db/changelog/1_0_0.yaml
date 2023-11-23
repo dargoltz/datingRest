@@ -42,7 +42,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
         - addForeignKeyConstraint:
-            constraintName: fk_user_id
+            constraintName: fk_user
             baseTableName: user_profile
             baseColumnNames: user
             referencedTableName: user
