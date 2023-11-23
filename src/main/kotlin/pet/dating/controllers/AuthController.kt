@@ -5,17 +5,17 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import pet.dating.dto.UserAuthDto
 import pet.dating.repositories.UserRepository
-import pet.dating.service.AuthValidationService
+import pet.dating.service.ValidationService
 
 @RestController
 class AuthController(
-    private val authValidationService: AuthValidationService,
+    private val validationService: ValidationService,
     private val userRepository: UserRepository
 ) {
 
     @PostMapping("/registration")
     fun registration(@RequestBody userAuthDto: UserAuthDto): String {
-        return if (authValidationService.validateNewUser(userAuthDto)) {
+        return if (validationService.validateNewUser(userAuthDto)) {
             userRepository.save(userAuthDto.toUser())
             "user was created"
         } else {
