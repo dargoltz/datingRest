@@ -27,7 +27,7 @@ class MainController(
 
     @PostMapping("/change_info")
     fun changeUserProfile(@RequestBody userProfileDto: UserProfileDto): String {
-        return userService.changeUserProfile(userProfileDto)
+        return userService.changeUserProfile(userService.getAuthenticatedUsername(), userProfileDto)
     }
 
     @GetMapping("/like/{username}")
