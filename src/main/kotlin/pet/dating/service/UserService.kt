@@ -95,15 +95,15 @@ class UserService(
         return "removed like from user $dislikedUser"
     }
 
-    fun changeUserProfile(userProfileDto: UserProfileDto): String {
+    fun changeUserProfile(username: String, userProfileDto: UserProfileDto): String {
 
-        val username = "me"
-        return if (userProfileDto.username != username) {
-            "username can't be changed"
-        } else {
-            userProfileRepository.save(userProfileDto.toUserProfile())
+        return if (userProfileDto.username == null || userProfileDto.username == username) {
+            userProfileRepository.save(userProfileDto.toUserProfile(username))
             "user profile was changed"
+        } else {
+            "username can't be changed"
         }
+
     }
 
 }
