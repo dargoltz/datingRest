@@ -19,15 +19,14 @@ open class UserProfile {
     fun toUserProfileDto(showContacts: Boolean): UserProfileDto {
         return if(showContacts) {
             UserProfileDto(
-                username = username!!,
+                username = username,
                 info = info!!,
-                contacts = contacts
+                contacts = contacts!!
             )
         } else {
             UserProfileDto(
-                username = username!!,
+                username = username,
                 info = info!!,
-                contacts = "no access"
             )
         }
     }
