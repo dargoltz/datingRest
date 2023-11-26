@@ -38,7 +38,7 @@ class SecurityConfig {
         http {
             csrf { disable() }
             authorizeRequests {
-                authorize(HttpMethod.POST,"/registration", permitAll)
+                authorize(HttpMethod.POST,"/sign_up", permitAll)
                 authorize(anyRequest, authenticated)
             }
             formLogin { }
