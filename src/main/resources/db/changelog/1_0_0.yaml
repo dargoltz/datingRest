@@ -27,7 +27,7 @@ databaseChangeLog:
             tableName: user_profile
             columns:
               - column:
-                  name: user
+                  name: username
                   type: varchar(255)
                   constraints:
                     primaryKey: true
@@ -44,7 +44,7 @@ databaseChangeLog:
         - addForeignKeyConstraint:
             constraintName: fk_user
             baseTableName: user_profile
-            baseColumnNames: user
+            baseColumnNames: username
             referencedTableName: user
             referencedColumnNames: username
 
@@ -52,7 +52,7 @@ databaseChangeLog:
             tableName: like
             columns:
               - column:
-                  name: user
+                  name: username
                   type: varchar(255)
                   constraints:
                     primaryKey: true
@@ -64,7 +64,7 @@ databaseChangeLog:
         - addForeignKeyConstraint:
             constraintName: fk_user
             baseTableName: like
-            baseColumnNames: user
+            baseColumnNames: username
             referencedTableName: user
             referencedColumnNames: username
         - addForeignKeyConstraint:
