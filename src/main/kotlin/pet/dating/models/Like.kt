@@ -9,4 +9,12 @@ import jakarta.persistence.Table
 open class Like {
     @EmbeddedId
     open var id: LikeId? = null
+
+    fun getLike(id: LikeId): Like {
+
+        val like = Like()
+        like.id = id
+
+        return like
+    }
 }

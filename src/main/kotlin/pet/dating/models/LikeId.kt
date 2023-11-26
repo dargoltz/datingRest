@@ -27,4 +27,13 @@ open class LikeId : Serializable {
     companion object {
         private const val serialVersionUID = 8059207814646204713L
     }
+
+    fun getLikeId(user: String, likedUser: String): LikeId {
+
+        val likeId = LikeId()
+        likeId.user = user
+        likeId.likedUser = likedUser
+
+        return likeId
+    }
 }

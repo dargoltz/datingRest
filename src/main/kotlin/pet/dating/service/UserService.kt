@@ -48,7 +48,7 @@ class UserService(
 
         val likes = likeRepository.findAll()
 
-        val thoseILiked = likes.filter { it.id?.user == user }.map { it.id?.likedUser}
+        val thoseILiked = likes.filter { it.id?.user == user }.map { it.id?.likedUser }
         val whoLikeMe = likes.filter { it.id?.likedUser == user }.map { it.id?.user }
 
         val matches = thoseILiked.intersect(whoLikeMe.toSet()).filterNotNull()
@@ -64,32 +64,33 @@ class UserService(
         val thoseILiked =
             likes.filter { it.id?.user == user }.mapNotNull { it.id?.likedUser }
         val unlikedUsernames =
-            users.filter { it.username != user  && it.username !in thoseILiked }.mapNotNull { it.username }
+            users.filter { it.username != user && it.username !in thoseILiked }.mapNotNull { it.username }
 
         return unlikedUsernames.map { getUserProfile(it, false) }
     }
 
     fun like(user: String, likedUser: String): String {
 
-        val likeId = LikeId()
-        likeId.user = user
-        likeId.likedUser = likedUser
+        if (user == likedUser) {
+            return "you can't like yourself"
+        }
 
-        val like = Like()
-        like.id = likeId
-        likeRepository.save(like)
+        if (!isExistingUser(likedUser)) {
+            return "user $likedUser doesn't exist"
+        }
+
+        if (alreadyLiked(user, likedUser)) {
+            return "user $likedUser is already liked"
+        }
+
+        likeRepository.save(createLike(user, likedUser))
 
         return "user $likedUser was liked"
     }
 
     fun removeLike(user: String, dislikedUser: String): String {
 
-        val likeId = LikeId()
-        likeId.user = user
-        likeId.likedUser = dislikedUser
-
-        val like = Like()
-        like.id = likeId
+        val like = createLike(user, dislikedUser)
         likeRepository.delete(like)
 
         return "removed like from user $dislikedUser"
@@ -104,6 +105,22 @@ class UserService(
             "username can't be changed"
         }
 
+    }
+
+    //проверить
+    private fun isExistingUser(username: String): Boolean {
+
+        return userProfileRepository.findById(username).isPresent
+    }
+
+    private fun alreadyLiked(user: String, likedUser: String): Boolean {
+
+        return likeRepository.findById(createLike(user, likedUser).id!!).isPresent
+    }
+
+    private fun createLike(user: String, likedUser: String): Like {
+
+        return Like().getLike(LikeId().getLikeId(user, likedUser))
     }
 
 }
