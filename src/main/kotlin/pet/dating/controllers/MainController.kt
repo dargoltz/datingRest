@@ -10,19 +10,19 @@ class MainController(
     private val userService: UserService,
 ) {
 
-    @PostMapping("/registration")
-    fun registration(@RequestBody userAuthDto: UserAuthDto): String {
+    @PostMapping("/sign_up")
+    fun signUp(@RequestBody userAuthDto: UserAuthDto): String {
         return userService.createNewUser(userAuthDto)
     }
 
     @GetMapping("/unliked_users")
     fun getUnlikedUsers(): List<UserProfileDto> {
-        return userService.getUnlikedUsers()
+        return userService.getUnlikedUsers(userService.getAuthenticatedUsername())
     }
 
     @GetMapping("/matched_users")
     fun getMatchedUsers(): List<UserProfileDto> {
-        return userService.getMatchedUsers()
+        return userService.getMatchedUsers(userService.getAuthenticatedUsername())
     }
 
     @PostMapping("/change_info")
@@ -32,12 +32,12 @@ class MainController(
 
     @GetMapping("/like/{username}")
     fun like(@PathVariable username: String): String {
-        return userService.like(username)
+        return userService.like(userService.getAuthenticatedUsername(), username)
     }
 
     @GetMapping("/remove_like/{username}")
     fun unlike(@PathVariable username: String): String {
-        return userService.removeLike(username)
+        return userService.removeLike(userService.getAuthenticatedUsername(), username)
     }
 
 }

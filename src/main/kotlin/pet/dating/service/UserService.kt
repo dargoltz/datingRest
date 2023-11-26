@@ -1,5 +1,6 @@
 package pet.dating.service
 
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import pet.dating.dto.UserAuthDto
 import pet.dating.dto.UserProfileDto
@@ -16,6 +17,10 @@ class UserService(
     private val userProfileRepository: UserProfileRepository,
     private val likeRepository: LikeRepository
 ) {
+
+    fun getAuthenticatedUsername(): String {
+        return SecurityContextHolder.getContext().authentication.name
+    }
 
     fun createNewUser(userAuthDto: UserAuthDto): String {
 
@@ -39,57 +44,55 @@ class UserService(
 
     }
 
-    fun getMatchedUsers(): List<UserProfileDto> {
+    fun getMatchedUsers(user: String): List<UserProfileDto> {
 
         val likes = likeRepository.findAll()
-        val username = "me"
 
-        val thoseILiked = likes.filter { it.id?.user == username }.map { it.id?.likedUser}
-        val whoLikeMe = likes.filter { it.id?.likedUser == username }.map { it.id?.user }
+        val thoseILiked = likes.filter { it.id?.user == user }.map { it.id?.likedUser}
+        val whoLikeMe = likes.filter { it.id?.likedUser == user }.map { it.id?.user }
 
         val matches = thoseILiked.intersect(whoLikeMe.toSet()).filterNotNull()
 
         return matches.map { getUserProfile(it, true) }
     }
 
-    fun getUnlikedUsers(): List<UserProfileDto> {
+    fun getUnlikedUsers(user: String): List<UserProfileDto> {
 
         val likes = likeRepository.findAll()
         val users = userProfileRepository.findAll()
-        val username = "me"
 
         val thoseILiked =
-            likes.filter { it.id?.user == username }.mapNotNull { it.id?.likedUser }
+            likes.filter { it.id?.user == user }.mapNotNull { it.id?.likedUser }
         val unlikedUsernames =
-            users.filter { it.username != username  && it.username !in thoseILiked }.mapNotNull { it.username }
+            users.filter { it.username != user  && it.username !in thoseILiked }.mapNotNull { it.username }
 
         return unlikedUsernames.map { getUserProfile(it, false) }
     }
 
-    fun like(username: String): String {
+    fun like(user: String, likedUser: String): String {
 
         val likeId = LikeId()
-        likeId.user = "me"
-        likeId.likedUser = username
+        likeId.user = user
+        likeId.likedUser = likedUser
 
         val like = Like()
         like.id = likeId
         likeRepository.save(like)
 
-        return "user $username was liked"
+        return "user $likedUser was liked"
     }
 
-    fun removeLike(username: String): String {
+    fun removeLike(user: String, dislikedUser: String): String {
 
         val likeId = LikeId()
-        likeId.user = "me"
-        likeId.likedUser = username
+        likeId.user = user
+        likeId.likedUser = dislikedUser
 
         val like = Like()
         like.id = likeId
         likeRepository.delete(like)
 
-        return "removed like from user $username"
+        return "removed like from user $dislikedUser"
     }
 
     fun changeUserProfile(userProfileDto: UserProfileDto): String {
