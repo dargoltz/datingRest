@@ -8,7 +8,7 @@ import java.util.*
 
 @Embeddable
 open class LikeId : Serializable {
-    @Column(name = "\"user\"", nullable = false)
+    @Column(name = "\"username\"", nullable = false)
     open var user: String? = null
 
     @Column(name = "liked_user", nullable = false)

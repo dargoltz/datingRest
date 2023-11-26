@@ -7,7 +7,7 @@ import pet.dating.dto.UserProfileDto
 @Table(name = "user_profile")
 open class UserProfile {
     @Id
-    @Column(name = "\"user\"", nullable = false)
+    @Column(name = "\"username\"", nullable = false)
     open var username: String? = null
 
     @Column(name = "info", nullable = false)
