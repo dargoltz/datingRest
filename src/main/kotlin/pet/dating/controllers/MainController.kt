@@ -40,4 +40,7 @@ class MainController(
         return userService.removeLike(userService.getAuthenticatedUsername(), username)
     }
 
+    private fun getAuthenticatedUsername(): String {
+        return SecurityContextHolder.getContext().authentication.name
+    }
 }

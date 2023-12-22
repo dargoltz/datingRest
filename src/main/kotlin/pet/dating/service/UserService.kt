@@ -18,10 +18,6 @@ class UserService(
     private val likeRepository: LikeRepository
 ) {
 
-    fun getAuthenticatedUsername(): String {
-        return SecurityContextHolder.getContext().authentication.name
-    }
-
     fun createNewUser(userAuthDto: UserAuthDto): String {
 
         return if (validationService.validateNewUser(userAuthDto)) {
