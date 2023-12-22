@@ -8,9 +8,7 @@ import pet.dating.repositories.LikeRepository
 import pet.dating.repositories.UserProfileRepository
 
 @Service
-class UserService(
-    private val validationService: ValidationService,
-    private val userRepository: UserRepository,
+class LikeService(
     private val userProfileRepository: UserProfileRepository,
     private val likeRepository: LikeRepository
 ) {
