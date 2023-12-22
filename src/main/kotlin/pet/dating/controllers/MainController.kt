@@ -17,27 +17,27 @@ class MainController(
 
     @GetMapping("/unliked_users")
     fun getUnlikedUsers(): List<UserProfileDto> {
-        return userService.getUnlikedUsers(userService.getAuthenticatedUsername())
+        return userListService.getUnlikedUsers(getAuthenticatedUsername())
     }
 
     @GetMapping("/matched_users")
     fun getMatchedUsers(): List<UserProfileDto> {
-        return userService.getMatchedUsers(userService.getAuthenticatedUsername())
+        return userListService.getMatchedUsers(getAuthenticatedUsername())
     }
 
     @PostMapping("/change_info")
     fun changeUserProfile(@RequestBody userProfileDto: UserProfileDto): String {
-        return userService.changeUserProfile(userService.getAuthenticatedUsername(), userProfileDto)
+        return userService.changeUserProfile(getAuthenticatedUsername(), userProfileDto)
     }
 
     @GetMapping("/like/{username}")
     fun like(@PathVariable username: String): String {
-        return userService.like(userService.getAuthenticatedUsername(), username)
+        return userService.like(getAuthenticatedUsername(), username)
     }
 
     @GetMapping("/remove_like/{username}")
     fun unlike(@PathVariable username: String): String {
-        return userService.removeLike(userService.getAuthenticatedUsername(), username)
+        return userService.removeLike(getAuthenticatedUsername(), username)
     }
 
     private fun getAuthenticatedUsername(): String {
