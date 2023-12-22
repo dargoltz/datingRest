@@ -1,14 +1,11 @@
 package pet.dating.service
 
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
-import pet.dating.dto.UserAuthDto
 import pet.dating.dto.UserProfileDto
 import pet.dating.models.Like
 import pet.dating.models.LikeId
 import pet.dating.repositories.LikeRepository
 import pet.dating.repositories.UserProfileRepository
-import pet.dating.repositories.UserRepository
 
 @Service
 class UserService(
@@ -17,16 +14,6 @@ class UserService(
     private val userProfileRepository: UserProfileRepository,
     private val likeRepository: LikeRepository
 ) {
-
-    fun createNewUser(userAuthDto: UserAuthDto): String {
-
-        return if (validationService.validateNewUser(userAuthDto)) {
-            userRepository.save(userAuthDto.toUser())
-            "user was created"
-        } else {
-            "not valid"
-        }
-    }
 
     fun like(user: String, likedUser: String): String {
 

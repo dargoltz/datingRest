@@ -4,18 +4,20 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import pet.dating.dto.UserAuthDto
 import pet.dating.dto.UserProfileDto
+import pet.dating.service.AuthService
 import pet.dating.service.UserListService
-import pet.dating.service.UserService
+import pet.dating.service.LikeService
 
 @RestController
 class MainController(
-    private val userService: UserService,
+    private val authService: AuthService,
+    private val likeService: LikeService,
     private val userListService: UserListService,
     ) {
 
     @PostMapping("/sign_up")
     fun signUp(@RequestBody userAuthDto: UserAuthDto): String {
-        return userService.createNewUser(userAuthDto)
+        return authService.createNewUser(userAuthDto)
     }
 
     @GetMapping("/unliked_users")
@@ -30,17 +32,17 @@ class MainController(
 
     @PostMapping("/change_info")
     fun changeUserProfile(@RequestBody userProfileDto: UserProfileDto): String {
-        return userService.changeUserProfile(getAuthenticatedUsername(), userProfileDto)
+        return likeService.changeUserProfile(getAuthenticatedUsername(), userProfileDto)
     }
 
     @GetMapping("/like/{username}")
     fun like(@PathVariable username: String): String {
-        return userService.like(getAuthenticatedUsername(), username)
+        return likeService.like(getAuthenticatedUsername(), username)
     }
 
     @GetMapping("/remove_like/{username}")
     fun unlike(@PathVariable username: String): String {
-        return userService.removeLike(getAuthenticatedUsername(), username)
+        return likeService.removeLike(getAuthenticatedUsername(), username)
     }
 
     private fun getAuthenticatedUsername(): String {
