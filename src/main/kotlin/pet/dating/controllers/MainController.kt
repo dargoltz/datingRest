@@ -8,7 +8,8 @@ import pet.dating.service.UserService
 @RestController
 class MainController(
     private val userService: UserService,
-) {
+    private val userListService: UserListService,
+    ) {
 
     @PostMapping("/sign_up")
     fun signUp(@RequestBody userAuthDto: UserAuthDto): String {
