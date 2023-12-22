@@ -1,8 +1,10 @@
 package pet.dating.controllers
 
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import pet.dating.dto.UserAuthDto
 import pet.dating.dto.UserProfileDto
+import pet.dating.service.UserListService
 import pet.dating.service.UserService
 
 @RestController
