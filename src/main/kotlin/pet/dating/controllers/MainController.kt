@@ -7,11 +7,13 @@ import pet.dating.dto.UserProfileDto
 import pet.dating.service.AuthService
 import pet.dating.service.UserListService
 import pet.dating.service.LikeService
+import pet.dating.service.UserProfileService
 
 @RestController
 class MainController(
     private val authService: AuthService,
     private val likeService: LikeService,
+    private val userProfileService: UserProfileService,
     private val userListService: UserListService,
     ) {
 
@@ -32,7 +34,7 @@ class MainController(
 
     @PostMapping("/change_info")
     fun changeUserProfile(@RequestBody userProfileDto: UserProfileDto): String {
-        return likeService.changeUserProfile(getAuthenticatedUsername(), userProfileDto)
+        return userProfileService.changeUserProfile(getAuthenticatedUsername(), userProfileDto)
     }
 
     @GetMapping("/like/{username}")

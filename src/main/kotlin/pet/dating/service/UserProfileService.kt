@@ -1,8 +1,10 @@
 package pet.dating.service
 
+import org.springframework.stereotype.Service
 import pet.dating.dto.UserProfileDto
 import pet.dating.repositories.UserProfileRepository
 
+@Service
 class UserProfileService(
     private val userProfileRepository: UserProfileRepository
 ) {
