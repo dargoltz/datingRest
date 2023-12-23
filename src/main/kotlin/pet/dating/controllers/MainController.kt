@@ -1,5 +1,6 @@
 package pet.dating.controllers
 
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import pet.dating.dto.UserAuthDto
@@ -15,16 +16,18 @@ class MainController(
     private val likeService: LikeService,
     private val userProfileService: UserProfileService,
     private val userListService: UserListService,
-    ) {
+) {
 
     @PostMapping("/register")
-    fun register(@RequestBody userAuthDto: UserAuthDto): String {
-        return authService.processUser(userAuthDto, AuthService.UserAction.CREATE)
+    fun register(@RequestBody userAuthDto: UserAuthDto): ResponseEntity<String> {
+        val processingResult = authService.processUser(userAuthDto, AuthService.UserAction.CREATE)
+        return ResponseEntity.status(processingResult.status).body(processingResult.message)
     }
 
     @PostMapping("/delete")
-    fun delete(@RequestBody userAuthDto: UserAuthDto): String {
-        return authService.processUser(userAuthDto, AuthService.UserAction.DELETE)
+    fun delete(@RequestBody userAuthDto: UserAuthDto): ResponseEntity<String> {
+        val processingResult = authService.processUser(userAuthDto, AuthService.UserAction.DELETE)
+        return ResponseEntity.status(processingResult.status).body(processingResult.message)
     }
 
     @GetMapping("/unliked_users")

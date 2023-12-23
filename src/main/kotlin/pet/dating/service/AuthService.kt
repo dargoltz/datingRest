@@ -15,9 +15,11 @@ class AuthService(
         CREATE, DELETE, //CHANGE_ROLE
     }
 
-    fun processUser(userAuthDto: UserAuthDto, action: UserAction): String {
+    data class UserProcessingResult(val message: String, val status: Int)
+
+    fun processUser(userAuthDto: UserAuthDto, action: UserAction): UserProcessingResult {
         if (userAuthDto.username.isBlank() || userAuthDto.password.isBlank()) {
-            return "empty auth data"
+            return UserProcessingResult("empty auth data", 400)
         }
 
         val foundUser = userRepository.findById(userAuthDto.username)
@@ -28,26 +30,26 @@ class AuthService(
         }
     }
 
-    private fun createUser(userAuthDto: UserAuthDto, foundUser: Optional<User>): String {
+    private fun createUser(userAuthDto: UserAuthDto, foundUser: Optional<User>): UserProcessingResult {
         if (foundUser.isPresent) {
-            return "user ${userAuthDto.username} already exists"
+            return UserProcessingResult("user ${userAuthDto.username} already exists", 400)
         }
         userRepository.save(userAuthDto.toUser())
-        return "created user ${userAuthDto.username}"
+        return UserProcessingResult("created user ${userAuthDto.username}", 200)
     }
 
-    private fun deleteUser(userAuthDto: UserAuthDto, foundUser: Optional<User>): String {
+    private fun deleteUser(userAuthDto: UserAuthDto, foundUser: Optional<User>): UserProcessingResult {
         if (!foundUser.isPresent) {
-            return "user not found"
+            return UserProcessingResult("user not found", 400)
         }
 
         val inputPassword = BCryptPasswordEncoder().encode(userAuthDto.password)
 
         if (inputPassword != foundUser.get().password) {
-            return "wrong password"
+            return UserProcessingResult("wrong password", 400)
         }
 
         userRepository.delete(foundUser.get())
-        return "deleted user ${userAuthDto.username}"
+        return UserProcessingResult("deleted user ${userAuthDto.username}", 200)
     }
 }
