@@ -17,9 +17,14 @@ class MainController(
     private val userListService: UserListService,
     ) {
 
-    @PostMapping("/sign_up")
-    fun signUp(@RequestBody userAuthDto: UserAuthDto): String {
-        return authService.createNewUser(userAuthDto)
+    @PostMapping("/register")
+    fun register(@RequestBody userAuthDto: UserAuthDto): String {
+        return authService.processUser(userAuthDto, AuthService.UserAction.CREATE)
+    }
+
+    @PostMapping("/delete")
+    fun delete(@RequestBody userAuthDto: UserAuthDto): String {
+        return authService.processUser(userAuthDto, AuthService.UserAction.DELETE)
     }
 
     @GetMapping("/unliked_users")
