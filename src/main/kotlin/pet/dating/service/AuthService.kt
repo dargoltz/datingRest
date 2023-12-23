@@ -9,8 +9,7 @@ class AuthService(
     private val userRepository: UserRepository
 ) {
     fun createNewUser(userAuthDto: UserAuthDto): String {
-
-        return if (validateNewUser(userAuthDto)) {
+        return if (!isExistingUser(userAuthDto.username) && userAuthDto.username.isBlank()) {
             userRepository.save(userAuthDto.toUser())
             "user was created"
         } else {
@@ -18,13 +17,17 @@ class AuthService(
         }
     }
 
-    fun validateNewUser(userAuthDto: UserAuthDto): Boolean {
-        if (userAuthDto.password != userAuthDto.confirmPassword) {
-            return false
+    fun deleteUser(userAuthDto: UserAuthDto): String {
+        return if (isExistingUser(userAuthDto.username) && userAuthDto.username.isBlank()) {
+            userRepository.delete(userAuthDto.toUser())
+            "user was deleted"
+        } else {
+            "not valid"
         }
-        if (userAuthDto.username.isBlank()) {
-            return false
-        }
-        return !userRepository.findById(userAuthDto.username).isPresent
     }
+
+    private fun isExistingUser(username: String): Boolean {
+        return userRepository.findById(username).isPresent
+    }
+
 }
