@@ -6,7 +6,6 @@ import pet.dating.models.User
 data class UserAuthDto(
     val username: String,
     val password: String,
-    val confirmPassword: String? = null
 ) {
     fun toUser(): User {
         val newUser = User()
