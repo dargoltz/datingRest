@@ -5,6 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import pet.dating.dto.UserAuthDto
 import pet.dating.dto.UserProfileDto
+import pet.dating.enums.UserAction
 import pet.dating.service.AuthService
 import pet.dating.service.UserListService
 import pet.dating.service.LikeService
@@ -20,13 +21,13 @@ class MainController(
 
     @PostMapping("/register")
     fun register(@RequestBody userAuthDto: UserAuthDto): ResponseEntity<String> {
-        val processingResult = authService.processUser(userAuthDto, AuthService.UserAction.CREATE)
+        val processingResult = authService.processUser(userAuthDto, UserAction.CREATE)
         return ResponseEntity.status(processingResult.status).body(processingResult.message)
     }
 
     @PostMapping("/delete")
     fun delete(@RequestBody userAuthDto: UserAuthDto): ResponseEntity<String> {
-        val processingResult = authService.processUser(userAuthDto, AuthService.UserAction.DELETE)
+        val processingResult = authService.processUser(userAuthDto, UserAction.DELETE)
         return ResponseEntity.status(processingResult.status).body(processingResult.message)
     }
 

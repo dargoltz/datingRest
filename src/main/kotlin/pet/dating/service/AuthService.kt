@@ -3,6 +3,7 @@ package pet.dating.service
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import pet.dating.dto.UserAuthDto
+import pet.dating.enums.UserAction
 import pet.dating.models.User
 import pet.dating.repositories.UserRepository
 import java.util.*
@@ -11,10 +12,6 @@ import java.util.*
 class AuthService(
     private val userRepository: UserRepository
 ) {
-    enum class UserAction {
-        CREATE, DELETE, //CHANGE_ROLE
-    }
-
     data class UserProcessingResult(val message: String, val status: Int)
 
     fun processUser(userAuthDto: UserAuthDto, action: UserAction): UserProcessingResult {
