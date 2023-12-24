@@ -40,9 +40,9 @@ class AuthService(
             return UserProcessingResult("user not found", 400)
         }
 
-        val inputPassword = BCryptPasswordEncoder().encode(userAuthDto.password)
+        val isCorrectPassword = BCryptPasswordEncoder().matches(userAuthDto.password, foundUser.get().password)
 
-        if (inputPassword != foundUser.get().password) {
+        if (!isCorrectPassword) {
             return UserProcessingResult("wrong password", 400)
         }
 
