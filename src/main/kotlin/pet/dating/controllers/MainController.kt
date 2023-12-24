@@ -5,10 +5,11 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import pet.dating.dto.UserAuthDto
 import pet.dating.dto.UserProfileDto
+import pet.dating.enums.LikeAction
 import pet.dating.enums.UserAction
 import pet.dating.service.AuthService
-import pet.dating.service.UserListService
 import pet.dating.service.LikeService
+import pet.dating.service.UserListService
 import pet.dating.service.UserProfileService
 
 @RestController
@@ -47,13 +48,15 @@ class MainController(
     }
 
     @GetMapping("/like/{username}")
-    fun like(@PathVariable username: String): String {
-        return likeService.like(getAuthenticatedUsername(), username)
+    fun like(@PathVariable username: String): ResponseEntity<String> {
+        val processingResult = likeService.processLike(getAuthenticatedUsername(), username, LikeAction.LIKE)
+        return ResponseEntity.status(processingResult.status).body(processingResult.message)
     }
 
-    @GetMapping("/remove_like/{username}")
-    fun unlike(@PathVariable username: String): String {
-        return likeService.removeLike(getAuthenticatedUsername(), username)
+    @GetMapping("/dislike/{username}")
+    fun unlike(@PathVariable username: String): ResponseEntity<String> {
+        val processingResult = likeService.processLike(getAuthenticatedUsername(), username, LikeAction.DISLIKE)
+        return ResponseEntity.status(processingResult.status).body(processingResult.message)
     }
 
     private fun getAuthenticatedUsername(): String {
