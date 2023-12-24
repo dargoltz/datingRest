@@ -2,6 +2,7 @@ package pet.dating.service
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import pet.dating.dto.ProcessingResult
 import pet.dating.dto.UserAuthDto
 import pet.dating.enums.UserAction
 import pet.dating.models.User
@@ -12,11 +13,10 @@ import java.util.*
 class AuthService(
     private val userRepository: UserRepository
 ) {
-    data class UserProcessingResult(val message: String, val status: Int)
 
-    fun processUser(userAuthDto: UserAuthDto, action: UserAction): UserProcessingResult {
+    fun processUser(userAuthDto: UserAuthDto, action: UserAction): ProcessingResult {
         if (userAuthDto.username.isBlank() || userAuthDto.password.isBlank()) {
-            return UserProcessingResult("empty auth data", 400)
+            return ProcessingResult("empty auth data", 400)
         }
 
         val foundUser = userRepository.findById(userAuthDto.username)
@@ -27,26 +27,26 @@ class AuthService(
         }
     }
 
-    private fun createUser(userAuthDto: UserAuthDto, foundUser: Optional<User>): UserProcessingResult {
+    private fun createUser(userAuthDto: UserAuthDto, foundUser: Optional<User>): ProcessingResult {
         if (foundUser.isPresent) {
-            return UserProcessingResult("user ${userAuthDto.username} already exists", 400)
+            return ProcessingResult("user ${userAuthDto.username} already exists", 400)
         }
         userRepository.save(userAuthDto.toUser())
-        return UserProcessingResult("created user ${userAuthDto.username}", 200)
+        return ProcessingResult("created user ${userAuthDto.username}", 200)
     }
 
-    private fun deleteUser(userAuthDto: UserAuthDto, foundUser: Optional<User>): UserProcessingResult {
+    private fun deleteUser(userAuthDto: UserAuthDto, foundUser: Optional<User>): ProcessingResult {
         if (!foundUser.isPresent) {
-            return UserProcessingResult("user not found", 400)
+            return ProcessingResult("user not found", 400)
         }
 
         val isCorrectPassword = BCryptPasswordEncoder().matches(userAuthDto.password, foundUser.get().password)
 
         if (!isCorrectPassword) {
-            return UserProcessingResult("wrong password", 400)
+            return ProcessingResult("wrong password", 400)
         }
 
         userRepository.delete(foundUser.get())
-        return UserProcessingResult("deleted user ${userAuthDto.username}", 200)
+        return ProcessingResult("deleted user ${userAuthDto.username}", 200)
     }
 }
