@@ -1,7 +1,6 @@
 package pet.dating.controllers
 
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import pet.dating.dto.UserAuthDto
 import pet.dating.dto.UserProfileDto
@@ -28,38 +27,56 @@ class MainController(
 
     @PostMapping("/delete")
     fun delete(@RequestBody userAuthDto: UserAuthDto): ResponseEntity<String> {
-        val processingResult = authService.processUser(userAuthDto, UserAction.DELETE)
+        if(!isAuthenticated()) {
+            return ResponseEntity.status(401).body("Unauthorized")
+        }
+        val processingResult = authService.processUser(userAuthDto, UserAction.DELETE) // todo check who delete user
         return ResponseEntity.status(processingResult.status).body(processingResult.message)
     }
 
     @GetMapping("/unliked_users")
-    fun getUnlikedUsers(): List<UserProfileDto> {
-        return userListService.getUnlikedUsers(getAuthenticatedUsername())
+    fun getUnlikedUsers(): ResponseEntity<List<UserProfileDto>> {
+        if(!isAuthenticated()) {
+            return ResponseEntity.status(401).body(emptyList())
+        }
+        return ResponseEntity.status(200).body(userListService.getUnlikedUsers(getAuthenticatedUsername()))
     }
 
     @GetMapping("/matched_users")
-    fun getMatchedUsers(): List<UserProfileDto> {
-        return userListService.getMatchedUsers(getAuthenticatedUsername())
+    fun getMatchedUsers(): ResponseEntity<List<UserProfileDto>> {
+        if(!isAuthenticated()) {
+            return ResponseEntity.status(401).body(emptyList())
+        }
+        return ResponseEntity.status(200).body(userListService.getMatchedUsers(getAuthenticatedUsername()))
     }
 
     @PostMapping("/change_info")
-    fun changeUserProfile(@RequestBody userProfileDto: UserProfileDto): String {
-        return userProfileService.changeUserProfile(getAuthenticatedUsername(), userProfileDto)
+    fun changeUserProfile(@RequestBody userProfileDto: UserProfileDto): ResponseEntity<String> {
+        if(!isAuthenticated()) {
+            return ResponseEntity.status(401).body("Unauthorized")
+        }
+        return ResponseEntity
+            .status(200)
+            .body(userProfileService.changeUserProfile(getAuthenticatedUsername(), userProfileDto))
     }
 
     @GetMapping("/like/{username}")
     fun like(@PathVariable username: String): ResponseEntity<String> {
+        if(!isAuthenticated()) {
+            return ResponseEntity.status(401).body("Unauthorized")
+        }
         val processingResult = likeService.processLike(getAuthenticatedUsername(), username, LikeAction.LIKE)
         return ResponseEntity.status(processingResult.status).body(processingResult.message)
     }
 
     @GetMapping("/dislike/{username}")
     fun unlike(@PathVariable username: String): ResponseEntity<String> {
+        if(!isAuthenticated()) {
+            return ResponseEntity.status(401).body("Unauthorized")
+        }
         val processingResult = likeService.processLike(getAuthenticatedUsername(), username, LikeAction.DISLIKE)
         return ResponseEntity.status(processingResult.status).body(processingResult.message)
     }
-
-    private fun getAuthenticatedUsername(): String {
-        return SecurityContextHolder.getContext().authentication.name
-    }
+    private fun getAuthenticatedUsername(): String = ""
+    private fun isAuthenticated(): Boolean = false
 }
