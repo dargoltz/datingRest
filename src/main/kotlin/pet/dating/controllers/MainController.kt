@@ -26,8 +26,12 @@ class MainController(
     }
 
     @PostMapping("/delete")
-    fun delete(@RequestBody userAuthDto: UserAuthDto): ResponseEntity<String> {
-        if(!isAuthenticated()) {
+    fun delete(
+        @RequestHeader("Token") token: String?,
+        @RequestHeader("Username") username: String,
+        @RequestBody userAuthDto: UserAuthDto
+    ): ResponseEntity<String> {
+        if(!isAuthenticated(token)) {
             return ResponseEntity.status(401).body("Unauthorized")
         }
         val processingResult = authService.processUser(userAuthDto, UserAction.DELETE) // todo check who delete user
@@ -35,48 +39,65 @@ class MainController(
     }
 
     @GetMapping("/unliked_users")
-    fun getUnlikedUsers(): ResponseEntity<List<UserProfileDto>> {
-        if(!isAuthenticated()) {
+    fun getUnlikedUsers(
+        @RequestHeader("Token") token: String?,
+        @RequestHeader("Username") username: String  // todo test when no header
+        ): ResponseEntity<List<UserProfileDto>> {
+        if(!isAuthenticated(token)) {
             return ResponseEntity.status(401).body(emptyList())
         }
-        return ResponseEntity.status(200).body(userListService.getUnlikedUsers(getAuthenticatedUsername()))
+        return ResponseEntity.status(200).body(userListService.getUnlikedUsers(username))
     }
 
     @GetMapping("/matched_users")
-    fun getMatchedUsers(): ResponseEntity<List<UserProfileDto>> {
-        if(!isAuthenticated()) {
+    fun getMatchedUsers(
+        @RequestHeader("Token") token: String?,
+        @RequestHeader("Username") username: String
+    ): ResponseEntity<List<UserProfileDto>> {
+        if(!isAuthenticated(token)) {
             return ResponseEntity.status(401).body(emptyList())
         }
-        return ResponseEntity.status(200).body(userListService.getMatchedUsers(getAuthenticatedUsername()))
+        return ResponseEntity.status(200).body(userListService.getMatchedUsers(username))
     }
 
     @PostMapping("/change_info")
-    fun changeUserProfile(@RequestBody userProfileDto: UserProfileDto): ResponseEntity<String> {
-        if(!isAuthenticated()) {
+    fun changeUserProfile(
+        @RequestHeader("Token") token: String?,
+        @RequestHeader("Username") username: String,
+        @RequestBody userProfileDto: UserProfileDto
+    ): ResponseEntity<String> {
+        if(!isAuthenticated(token)) {
             return ResponseEntity.status(401).body("Unauthorized")
         }
         return ResponseEntity
             .status(200)
-            .body(userProfileService.changeUserProfile(getAuthenticatedUsername(), userProfileDto))
+            .body(userProfileService.changeUserProfile(username, userProfileDto))
     }
 
-    @GetMapping("/like/{username}")
-    fun like(@PathVariable username: String): ResponseEntity<String> {
-        if(!isAuthenticated()) {
+    @GetMapping("/like/{usernameToLike}")
+    fun like(
+        @RequestHeader("Token") token: String?,
+        @RequestHeader("Username") username: String,
+        @PathVariable usernameToLike: String
+    ): ResponseEntity<String> {
+        if(!isAuthenticated(token)) {
             return ResponseEntity.status(401).body("Unauthorized")
         }
-        val processingResult = likeService.processLike(getAuthenticatedUsername(), username, LikeAction.LIKE)
+        val processingResult = likeService.processLike(username, usernameToLike, LikeAction.LIKE)
         return ResponseEntity.status(processingResult.status).body(processingResult.message)
     }
 
-    @GetMapping("/dislike/{username}")
-    fun unlike(@PathVariable username: String): ResponseEntity<String> {
-        if(!isAuthenticated()) {
+    @GetMapping("/dislike/{usernameToDislike}")
+    fun dislike(
+        @RequestHeader("Token") token: String?,
+        @RequestHeader("Username") username: String,
+        @PathVariable usernameToDislike: String
+    ): ResponseEntity<String> {
+        if(!isAuthenticated(token)) {
             return ResponseEntity.status(401).body("Unauthorized")
         }
-        val processingResult = likeService.processLike(getAuthenticatedUsername(), username, LikeAction.DISLIKE)
+        val processingResult = likeService.processLike(username, usernameToDislike, LikeAction.DISLIKE)
         return ResponseEntity.status(processingResult.status).body(processingResult.message)
     }
-    private fun getAuthenticatedUsername(): String = ""
-    private fun isAuthenticated(): Boolean = false
+    private fun isAuthenticated(token: String?): Boolean = token != null
 }
