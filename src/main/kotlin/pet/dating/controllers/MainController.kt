@@ -28,6 +28,15 @@ class MainController(
             .body(processingResult.message)
     }
 
+    @PostMapping("/login")
+    fun login(userAuthDto: UserAuthDto): ResponseEntity<String> {
+        val processingResult = authService.processUser(userAuthDto, UserAction.LOGIN)
+
+        return ResponseEntity
+            .status(processingResult.status)
+            .body(processingResult.message)
+    }
+
     @PostMapping("/delete")
     fun delete(
         @RequestHeader("Token") token: String, // todo test when no header
