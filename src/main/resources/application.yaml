@@ -1,3 +1,5 @@
 spring:
   liquibase:
     change-log: classpath:db/changelog/1_0_0.yaml
+keys:
+  jwt_signature: B7Qxs6wTfPpPgL24
