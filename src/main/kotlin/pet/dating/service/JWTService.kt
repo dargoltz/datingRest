@@ -8,9 +8,9 @@ import java.util.*
 @Service
 class JWTService {
 
-    fun createToken(username: String): String {
-        val secretKey = "yourSecretKey"
+    val secretKey = "yourSecretKey"
 
+    fun createToken(username: String): String {
         return Jwts.builder()
             .setSubject(username)
             .setExpiration(Date())
@@ -18,7 +18,12 @@ class JWTService {
             .compact()
     }
 
-    fun validateTokenAndGetUsername(token: String): String? {
-        return null
+    fun parseTokenAndGetUsername(token: String): String? {
+        return try {
+            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).body
+        } catch (e: Exception) {
+            null
+        }?.subject
     }
+
 }

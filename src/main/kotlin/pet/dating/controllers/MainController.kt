@@ -40,10 +40,10 @@ class MainController(
         @RequestHeader("Token") token: String, // todo test when no header
         @RequestBody userAuthDto: UserAuthDto
     ): ResponseEntity<String> {
-        val username = jwtService.validateTokenAndGetUsername(token)
+        val username = jwtService.parseTokenAndGetUsername(token)
             ?: return ResponseEntity
                 .status(401)
-                .body("Unauthorized")
+                .body("Invalid Token")
         if(username != userAuthDto.username) {
             return ResponseEntity
                 .status(403)
@@ -60,7 +60,7 @@ class MainController(
     fun getUnlikedUsers(
         @RequestHeader("Token") token: String
     ): ResponseEntity<List<UserProfileDto>> {
-        val username = jwtService.validateTokenAndGetUsername(token)
+        val username = jwtService.parseTokenAndGetUsername(token)
             ?: return ResponseEntity
                 .status(401)
                 .body(emptyList())
@@ -74,7 +74,7 @@ class MainController(
     fun getMatchedUsers(
         @RequestHeader("Token") token: String,
     ): ResponseEntity<List<UserProfileDto>> {
-        val username = jwtService.validateTokenAndGetUsername(token)
+        val username = jwtService.parseTokenAndGetUsername(token)
             ?: return ResponseEntity
                 .status(401)
                 .body(emptyList())
@@ -89,10 +89,10 @@ class MainController(
         @RequestHeader("Token") token: String,
         @RequestBody userProfileDto: UserProfileDto
     ): ResponseEntity<String> {
-        val username = jwtService.validateTokenAndGetUsername(token)
+        val username = jwtService.parseTokenAndGetUsername(token)
             ?: return ResponseEntity
                 .status(401)
-                .body("Unauthorized")
+                .body("Invalid Token")
 
         return ResponseEntity
             .status(200)
@@ -104,10 +104,10 @@ class MainController(
         @RequestHeader("Token") token: String,
         @PathVariable usernameToLike: String
     ): ResponseEntity<String> {
-        val username = jwtService.validateTokenAndGetUsername(token)
+        val username = jwtService.parseTokenAndGetUsername(token)
             ?: return ResponseEntity
                 .status(401)
-                .body("Unauthorized")
+                .body("Invalid Token")
         val processingResult = likeService.processLike(username, usernameToLike, LikeAction.LIKE)
 
         return ResponseEntity
@@ -120,10 +120,10 @@ class MainController(
         @RequestHeader("Token") token: String,
         @PathVariable usernameToDislike: String
     ): ResponseEntity<String> {
-        val username = jwtService.validateTokenAndGetUsername(token)
+        val username = jwtService.parseTokenAndGetUsername(token)
             ?: return ResponseEntity
                 .status(401)
-                .body("Unauthorized")
+                .body("Invalid Token")
         val processingResult = likeService.processLike(username, usernameToDislike, LikeAction.DISLIKE)
 
         return ResponseEntity
