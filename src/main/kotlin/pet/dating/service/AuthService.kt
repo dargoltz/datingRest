@@ -1,5 +1,6 @@
 package pet.dating.service
 
+import org.mindrot.jbcrypt.BCrypt
 import org.springframework.stereotype.Service
 import pet.dating.dto.ProcessingResult
 import pet.dating.dto.UserAuthDto
@@ -41,7 +42,7 @@ class AuthService(
         if (!foundUser.isPresent) {
             return ProcessingResult("user ${userAuthDto.username} not found", 400)
         }
-        if (!isCorrectPassword(userAuthDto)) {
+        if (!isCorrectPassword(userAuthDto.password, foundUser)) {
             return ProcessingResult("wrong password", 400)
         }
 
@@ -52,7 +53,7 @@ class AuthService(
         if (!foundUser.isPresent) {
             return ProcessingResult("user ${userAuthDto.username} not found", 400)
         }
-        if (!isCorrectPassword(userAuthDto)) {
+        if (!isCorrectPassword(userAuthDto.password, foundUser)) {
             return ProcessingResult("wrong password", 400)
         }
 
@@ -61,7 +62,7 @@ class AuthService(
         return ProcessingResult("deleted user ${userAuthDto.username}", 200)
     }
 
-    private fun isCorrectPassword(userAuthDto: UserAuthDto): Boolean {
-        return true // todo
+    private fun isCorrectPassword(password: String, foundUser: Optional<User>): Boolean {
+        return BCrypt.checkpw(password, foundUser.get().password)
     }
 }
