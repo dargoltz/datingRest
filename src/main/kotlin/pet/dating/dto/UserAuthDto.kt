@@ -1,6 +1,6 @@
 package pet.dating.dto
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.mindrot.jbcrypt.BCrypt
 import pet.dating.models.User
 
 data class UserAuthDto(
@@ -10,7 +10,7 @@ data class UserAuthDto(
     fun toUser(): User {
         val newUser = User()
         newUser.username = username
-        newUser.password = BCryptPasswordEncoder().encode(password)
+        newUser.password = BCrypt.hashpw(password, BCrypt.gensalt())
         newUser.role = "USER"
         return newUser
     }
