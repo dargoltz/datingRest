@@ -1,5 +1,10 @@
 spring:
   liquibase:
     change-log: classpath:db/changelog/1_0_0.yaml
+  datasource:
+    url: jdbc:postgresql://localhost:5432/dating_db
+    username: qwe
+    password: qwe
+    driver-class-name: org.postgresql.Driver
 keys:
   jwt_signature: B7Qxs6wTfPpPgL24
