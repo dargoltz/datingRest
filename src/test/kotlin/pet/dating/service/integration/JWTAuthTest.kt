@@ -21,72 +21,65 @@ class JWTAuthTest {
     object TestData {
         const val username = "testUser"
         const val password = "password"
+        const val wrongPassword = "wrongPassword"
         const val wrongToken = "wrongToken"
     }
 
     @Test
     fun `get users list without token`() {
-        mockMvc.perform(get("/users"))
+        mockMvc.perform(get("/unliked_users"))
             .andExpect(status().isUnauthorized)
-    }
-
-    @Test
-    fun `register with testData`() {
-        mockMvc.perform(post("/register")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content("""{"username": "${TestData.username}", "password": "${TestData.password}"}"""))
-            .andExpect(status().isOk)
-    }
+    }  // 401
 
     @Test
     fun `login with wrong testData`() {
-        mockMvc.perform(post("/login")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content("""{"username": "${TestData.username}", "password": "wrongPassword"}"""))
+        mockMvc.perform(
+            post("/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""{"username": "${TestData.username}", "password": ${TestData.wrongPassword}}""")
+        )
             .andExpect(status().isBadRequest)
-    }
-
-    @Test
-    fun `login with correct testData`() {
-        mockMvc.perform(post("/login")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content("""{"username": "${TestData.username}", "password": "${TestData.password}"}"""))
-            .andExpect(status().isOk)
-            .andExpect(header().exists(HttpHeaders.AUTHORIZATION))
-    }
+    }  // 400
 
     @Test
     fun `get users list with wrong token`() {
-        mockMvc.perform(get("/unliked_users")
-            .header(HttpHeaders.AUTHORIZATION, "Bearer ${TestData.wrongToken}"))
+        mockMvc.perform(
+            get("/unliked_users")
+                .header("Token", TestData.wrongToken)
+        )
             .andExpect(status().isUnauthorized)
-    }
+    }  // 400
 
     @Test
     fun `get users list with correct token`() {
         val token = obtainToken()
-        mockMvc.perform(get("/unliked_users")
-            .header(HttpHeaders.AUTHORIZATION, "Bearer $token"))
+        mockMvc.perform(
+            get("/unliked_users")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
+        )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        // Добавьте дополнительные проверки, в зависимости от вашего результата
-    }
+        // todo delete test user
+    }  // 200 []
 
     private fun obtainToken(): String {
         registerWithTestData()
-        val result = mockMvc.perform(post("/login")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content("""{"username": "${TestData.username}", "password": "${TestData.password}"}"""))
+        val result = mockMvc.perform(
+            post("/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""{"username": "${TestData.username}", "password": "${TestData.password}"}""")
+        )
             .andReturn()
 
-        val tokenHeader = result.response.getHeader(HttpHeaders.AUTHORIZATION)
-        return tokenHeader?.replace("Bearer ", "") ?: throw IllegalStateException("Token not found")
+        return result.response.getHeader("Token") ?: throw Exception("Token not found")
     }
 
     private fun registerWithTestData() {
-        mockMvc.perform(post("/register")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content("""{"username": "${TestData.username}", "password": "${TestData.password}"}"""))
+        mockMvc.perform(
+            post("/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""{"username": "${TestData.username}", "password": "${TestData.password}"}""")
+        )
             .andExpect(status().isOk)
     }
 }
