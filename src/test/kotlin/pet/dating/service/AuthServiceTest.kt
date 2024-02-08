@@ -60,6 +60,32 @@ class AuthServiceTest {
     }
 
     @Test
+    fun `test processUser when action is LOGIN and user exists with correct password`() {
+        // Arrange
+        val userAuthDto = UserAuthDto(TestData.username, TestData.correctPassword)
+        `when`(userRepository.findById(TestData.username)).thenReturn(Optional.of(getTestUser(true)))
+        `when`(jwtService.createToken(TestData.username)).thenReturn(TestData.token)
+
+        val result = authService.processUser(userAuthDto, UserAction.LOGIN)
+
+        assertEquals(TestData.token, result.message)
+        assertEquals(200, result.status)
+    }
+
+    @Test
+    fun `test processUser when action is LOGIN and user exists with incorrect password`() {
+        // Arrange
+        val userAuthDto = UserAuthDto(TestData.username, TestData.correctPassword)
+        `when`(userRepository.findById(TestData.username)).thenReturn(Optional.of(getTestUser(false)))
+
+        val result = authService.processUser(userAuthDto, UserAction.LOGIN)
+
+        assertEquals("wrong password", result.message)
+        assertEquals(400, result.status)
+        verify(jwtService, never()).createToken(anyString())
+    }
+
+    @Test
     fun `test processUser when action is DELETE and user exists with correct password`() {
         // Arrange
         val userAuthDto = UserAuthDto(TestData.username, TestData.correctPassword)
