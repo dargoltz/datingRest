@@ -4,12 +4,12 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -48,38 +48,27 @@ class JWTAuthTest {
                 .header("Token", TestData.wrongToken)
         )
             .andExpect(status().isUnauthorized)
-    }  // 400
+    }  // 401
 
     @Test
     fun `get users list with correct token`() {
-        val token = obtainToken()
+        val token = getToken()
         mockMvc.perform(
             get("/unliked_users")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
+                .header("Token", token)
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        // todo delete test user
     }  // 200 []
 
-    private fun obtainToken(): String {
-        registerWithTestData()
-        val result = mockMvc.perform(
+    private fun getToken(): String {
+        return mockMvc.perform(
             post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""{"username": "${TestData.username}", "password": "${TestData.password}"}""")
         )
             .andReturn()
-
-        return result.response.getHeader("Token") ?: throw Exception("Token not found")
-    }
-
-    private fun registerWithTestData() {
-        mockMvc.perform(
-            post("/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""{"username": "${TestData.username}", "password": "${TestData.password}"}""")
-        )
-            .andExpect(status().isOk)
+            .response
+            .contentAsString
     }
 }
