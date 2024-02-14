@@ -20,7 +20,10 @@ class JWTService {
             .compact()
     }
 
-    fun parseTokenAndGetUsername(token: String): String? {
+    fun parseTokenAndGetUsername(token: String?): String? {
+        if (token == null) {
+            return null
+        }
         return try {
             Jwts.parser()
                 .setSigningKey(signature)

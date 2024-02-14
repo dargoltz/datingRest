@@ -27,7 +27,7 @@ class MainController(
     }
 
     @PostMapping("/login")
-    fun login(userAuthDto: UserAuthDto): ResponseEntity<String> {
+    fun login(@RequestBody userAuthDto: UserAuthDto): ResponseEntity<String> {
         val processingResult = authService.processUser(userAuthDto, UserAction.LOGIN)
 
         return ResponseEntity
@@ -37,7 +37,7 @@ class MainController(
 
     @PostMapping("/delete")
     fun delete(
-        @RequestHeader("Token") token: String, // todo test when no header
+        @RequestHeader("Token") token: String?,
         @RequestBody userAuthDto: UserAuthDto
     ): ResponseEntity<String> {
         val username = jwtService.parseTokenAndGetUsername(token)
@@ -58,7 +58,7 @@ class MainController(
 
     @GetMapping("/unliked_users")
     fun getUnlikedUsers(
-        @RequestHeader("Token") token: String
+        @RequestHeader("Token") token: String?
     ): ResponseEntity<List<UserProfileDto>> {
         val username = jwtService.parseTokenAndGetUsername(token)
             ?: return ResponseEntity
@@ -72,7 +72,7 @@ class MainController(
 
     @GetMapping("/matched_users")
     fun getMatchedUsers(
-        @RequestHeader("Token") token: String,
+        @RequestHeader("Token") token: String?,
     ): ResponseEntity<List<UserProfileDto>> {
         val username = jwtService.parseTokenAndGetUsername(token)
             ?: return ResponseEntity
@@ -86,7 +86,7 @@ class MainController(
 
     @PostMapping("/change_info")
     fun changeUserProfile(
-        @RequestHeader("Token") token: String,
+        @RequestHeader("Token") token: String?,
         @RequestBody userProfileDto: UserProfileDto
     ): ResponseEntity<String> {
         val username = jwtService.parseTokenAndGetUsername(token)
@@ -101,7 +101,7 @@ class MainController(
 
     @GetMapping("/like/{usernameToLike}")
     fun like(
-        @RequestHeader("Token") token: String,
+        @RequestHeader("Token") token: String?,
         @PathVariable usernameToLike: String
     ): ResponseEntity<String> {
         val username = jwtService.parseTokenAndGetUsername(token)
@@ -117,7 +117,7 @@ class MainController(
 
     @GetMapping("/dislike/{usernameToDislike}")
     fun dislike(
-        @RequestHeader("Token") token: String,
+        @RequestHeader("Token") token: String?,
         @PathVariable usernameToDislike: String
     ): ResponseEntity<String> {
         val username = jwtService.parseTokenAndGetUsername(token)
