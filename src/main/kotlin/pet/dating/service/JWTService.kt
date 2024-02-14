@@ -15,7 +15,7 @@ class JWTService {
     fun createToken(username: String): String {
         return Jwts.builder()
             .setSubject(username)
-            .setExpiration(Date())
+//            .setExpiration(Date())
             .signWith(SignatureAlgorithm.HS512, signature)
             .compact()
     }
